@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "Ting": {
+            "applicationId": "rnklQPqG2yqcKwmXfYqMSqQ2CoF6lGB56sofWiHt", 
+            "masterKey": "I6q2bFRllHHuMagxxjhxvy6z58Y76yy1LjEbIjve"
+        }, 
+        "_default": {
+            "link": "Ting"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.17"
+    }
+}

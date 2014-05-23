@@ -1,0 +1,16 @@
+﻿<!doctype html>
+<html>
+<body>
+    <div>
+        <ul data-bind="foreach: boards">
+            <li class="list-group-item">
+                <a href="#" data-bind="click: $root.boardSelected">
+                    <h3 class="list-group-item-heading" data-bind="text: name"></h3>
+                    <span class="list-group-item-text" data-bind="text: description"></span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+</body>
+</html>

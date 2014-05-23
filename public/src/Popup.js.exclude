@@ -1,0 +1,128 @@
+﻿ControlsViewModel = function () {
+    var self = this;
+    self.categories = ko.observableArray();
+    self.categorySelected = function (cat, ev) {
+        Navigation.navigateTo("category/" + cat.short);
+        ev.stopPropagation();
+    };
+
+    self.init = function () {
+        Ting.Categories.getAll(function (res) {
+            for (var i = 0; i < res.length; i++) {
+                var cat = res[i];
+                cat.url = function () {
+                    return "/category/" + cat.short;
+                };
+                self.categories.push(cat);
+            }
+            //self.categories(res);
+        });
+    };
+}
+
+
+Controls = (function () {
+    var that = {},
+
+        init = function () {
+            var controlsBar = document.getElementById('controls');
+            var controlsVM = new ControlsViewModel();
+            controlsVM.init();
+            ko.applyBindings(controlsVM, controlsBar);
+            return that;
+        };
+
+    that.init = init;
+    return that;
+}());
+
+
+var MainView = (function () {
+    var that = {},
+        loggedin,
+
+        init = function () {
+            $(Ting.User).on('loggedin', function (res) {
+                loggedin = res.success;
+            });
+            var navdiv = $('#navigation-div');
+            console.log(navdiv);
+            $('#navigation-div').bind("scroll", function (event) {
+                $(that).trigger("scroll", event);
+                var offset = $('#navigation-div').scrollTop();
+                if (offset > 100) {
+                    $('#loginpanel').css('opacity', 100 / offset);
+                }
+                else {
+                    $('#loginpanel').css('opacity', 1);
+                }
+            });
+            return that;
+        };
+
+    that.init = init;
+    return that;
+
+}());
+
+var Popup = (function () {
+    var that = {},
+        navigation,
+        ting,
+        tabs,
+
+        init = function (context) {
+            console.log("SITE INIT: LOCATION", document.location);
+
+            $(document).foundation();
+            $(document).foundation('abide', 'events');
+
+            History = window['History'];
+            ting = Ting.init();
+
+            MainView.init();
+            initNavigation();
+
+            var userVM = UserViewModel.init();
+            console.log("USER VIEW MODEL", userVM);
+            ko.applyBindings(userVM, document.getElementById("usercontrols"));
+            ko.applyBindings(userVM, document.getElementById("loginpanel"));
+            ko.applyBindings(userVM, document.getElementById("usersettings"));
+
+            Controls.init();
+
+            if (userVM.isLoggedIn())
+                Navigation.navigateTo("pin");
+            else Navigation.navigateTo("login");
+
+            $("#splashScreen").hide();
+
+            return that;
+        },
+
+        initNavigation = function () {
+            var path = document.location.pathname;
+            var rootDir;
+            if (path.indexOf('public') != -1) {
+                rootDir = path.indexOf('public') != -1 ? '/public' : '';
+                path = path.replace('public', '');
+                path = path.replace('//', '/');
+            }
+
+            path = path.substr(1, path.length);
+            path = path == "popup.html" ? 'pin' : path;
+            path = path == "" ? "pin" : path;
+
+            console.log("Path", path);
+
+            navigation = Navigation.init({
+                allowWindowNavigation: true,
+                start: path,
+                rootDir: rootDir
+            });
+        };
+
+    that.init = init;
+    return that;
+}()).init();
+

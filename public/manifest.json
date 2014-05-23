@@ -1,0 +1,23 @@
+﻿{
+  "manifest_version": 2,
+
+  "name": "Ting",
+  "description": "Ting allows you to ping stuff.",
+  "version": "1.0",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+    "background": {
+        "page": "backgroundpage.html"
+    },
+
+  "permissions": [
+	"activeTab",
+    "bookmarks",
+	"tabs",
+    "desktopCapture" 
+  ]  ,
+    "browser_action": {
+    "default_icon": "res/images/ting-button.png",
+	"default_popup": "popup.html"
+  }
+}

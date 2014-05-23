@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Ting</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-control" content="no-cache">
+
+
+    <link rel="stylesheet" href="res/css/iconFont.min.css" />
+    <link rel="stylesheet" href="res/css/foundation.min.css" />
+    <link rel="stylesheet" href="res/css/normalize.min.css" />
+    <link rel="stylesheet" href="res/css/common.min.css" />
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js" type="text/javascript"></script>
+</head>
+
+<body style="width:400px; height:600px">
+    <div class="off-canvas-wrap">
+        <div class="inner-wrap">
+            <!-- TOP BAR -->
+            <div class="fixed">
+                <nav class="tab-bar" id="tab-bar">
+                    <!--LEFT-->
+                    <section class="left">
+                        <a class="left-off-canvas-toggle menu-icon button"><span></span></a>
+                    </section>
+                    <!--MID-->
+                    <section class="middle tab-bar-section">
+                        <div class="app-logo"></div>
+                    </section>
+                    <!--RIGHT-->
+                    <section class="right" id="usercontrols">
+                        <ul class="button-group" data-bind="visible: isLoggedIn() == false && isLoggingIn() == false">
+                            <li>
+                                <a href="#/register" class="button show-for-medium-up right">Register</a>
+                            </li>
+                            <li>
+                                <a class="button right" href="#/login">Login</a>
+                            </li>
+                        </ul>
+                        <div data-bind="visible: isLoggedIn">
+                            <div class="button controls-button menu-icon right">
+                                <div class="right-off-canvas-toggle menu-icon text-left">
+                                    <i class="icon-user-2 left headericon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </nav>
+            </div>
+            <!-- // END TOP BAR -->
+            <!--LEFT OFF CANVAS CONTROLS-->
+            <aside class="left-off-canvas-menu" id="controls">
+                <div>
+                    <ul class="off-canvas-list">
+                        <li>
+                            <ul class="off-canvas-list">
+                                <li><a href="#/all">All Categories</a></li>
+                                <li><a href="#/popular">Popular</a></li>
+                            </ul>
+                        <li><label>Categories</label></li>
+                        <li>
+                            <ul class="off-canvas-list" data-bind="foreach: categories">
+                                <li>
+                                    <!-- click: $root.categorySelected -->
+                                    <a data-bind="text: category_name, attr: { href: url() }"></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!--RIGHT OFF CANVAS CONTROLS // USER CONTROLS -->
+            <aside id="usersettings" class="right-off-canvas-menu">
+                <ul class="off-canvas-list">
+                    <li>
+                        <a href="#/feed">Your Feed</a>
+                    </li>
+                    <li>
+                        <label style="position:relative">
+                            Your Boards
+                            <a href="#/createBoard" style="position:absolute; right:0; top:0; padding:0.5rem;width: 35px;
+height: 100%" class="button">
+                                <i class="icon-plus-2 headericon" style="color: #FFFFFF;
+font-size: 1.2rem;"></i>
+                            </a>
+                        </label>
+                    </li>
+                    <li data-bind="with: boardsViewModel">
+                        <ul class="off-canvas-list" data-bind="foreach: boards">
+                            <li>
+                                <a href="#" data-bind="text: name, click: $root.boardSelected"></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><label>Your Account</label></li>
+                    <li><a href="#" data-bind="click: logoutCommand">Logout</a></li>
+                </ul>
+            </aside>
+
+
+            <!-- CONTENT -->
+            <section id="main" class="main noscroll vertical-stretch horizontal-stretch">
+                <div id="navigation-div" class="presenter scrollable vertical-stretch horizontal-stretch" style="top:2.8125rem" data-bind='event: { scroll: onscroll }'>
+
+                </div>
+                <div class="spinner" id="spinnerDiv" data-bind="spinner: isLoading"></div>
+            </section>
+            <!--MODALS-->
+            <div id="modal" class="reveal-modal" data-reveal>
+            </div>
+            <!-- /// END CONTENT -->
+            <a class="exit-off-canvas"></a>
+        </div>
+
+    </div>
+    <script type="text/html" id="pin-template">
+        <div class="th item" data-bind="afterRender: $root.pinRendered">
+            <a data-bind="attr: { href: url}" target="_blank">
+                <img class="pinImage" style="width:100%" data-bind="attr: { src: image }" />
+            </a>
+            <div class="pincontent">
+
+                <!-- ko if: title || description-->
+                <!-- ko if: title-->
+                <h4 data-bind="text: title" />
+                <!-- /ko -->
+                <!-- ko if: description-->
+                <div class="description">
+                    <p class="text-justify" data-bind="text: description" />
+                </div>
+                <!-- /ko-->
+                <!-- /ko -->
+                <div>
+                    <ul class="button-group horizontal-stretch">
+                        <li><a class="button">like</a></li>
+                        <li><a class="button">re-ting</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script src="res/js/jquery-2.1.0.min.js" type="text/javascript"></script>
+
+    <script src="res/js/knockout-3.1.0.js" type="text/javascript"></script>
+    <script src="res/js/spin.min.js" type="text/javascript"></script>
+
+    <script src="res/js/parse.min.js" type="text/javascript"></script>
+    <script src="res/js/jquery.history.min.js" type="text/javascript"></script>
+    <script src="res/js/js.signals.min.js" type="text/javascript"></script>
+    <script src="res/js/crossroads.min.js" type="text/javascript"></script>
+    <script src="res/js/jquery.imagesloaded.min.js" type="text/javascript"></script>
+
+    <!--    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.0.4/jquery.imagesloaded.min.js"></script>-->
+    <script src="src/UrlHelper.js" type="text/javascript"></script>
+
+    <script src="res/js/foundation.min.js" type="text/javascript"></script>
+    <script src="res/js/foundation.offcanvas.js"></script>
+    <script src="res/js/jquery.grid.min.js"></script>
+
+    <script src="src/ViewModels/BaseViewModel.js" type="text/javascript"></script>
+    <script src="src/ViewModels/BaseFeedViewModel.js" type="text/javascript"></script>
+
+    <script src="src/UserViewModel.js" type="text/javascript"></script>
+    <script src="src/ViewModels/LoginViewModel.js" type="text/javascript"></script>
+
+    <script src="src/Ting/Ting.js" type="text/javascript"></script>
+    <script src="src/Ting/Ting.Feed.js" type="text/javascript"></script>
+    <script src="src/Ting/Ting.Categories.js" type="text/javascript"></script>
+    <script src="src/Ting/User.js" type="text/javascript"></script>
+    <script src="src/Ting/Boards.js" type="text/javascript"></script>
+    <script src="src/Ting/Pins.js" type="text/javascript"></script>
+
+    <script src="src/Presenter.js" type="text/javascript"></script>
+    <script src="src/Presenter.ViewLoader.js" type="text/javascript"></script>
+    <script src="src/Presenter.ViewModelLoader.js" type="text/javascript"></script>
+
+    <script src="src/Routing.js" type="text/javascript"></script>
+    <script src="src/Navigation.js" type="text/javascript"></script>
+    <script src="src/Spinner.js" type="text/javascript"></script>
+
+    <script src="src/App.js" type="text/javascript"></script>
+    <script src="ChromeApp.js" type="text/javascript"></script>
+</body>
+</html>
